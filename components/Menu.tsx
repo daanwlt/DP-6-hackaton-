@@ -1,8 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { HEADER_GREEN } from '../constants/colors';
-
 export type MenuProps = {
   visible: boolean;
   onRequestClose: () => void;
