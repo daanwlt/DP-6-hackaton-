@@ -3,14 +3,14 @@ import { useRoosterSettings } from '../context/RoosterSettingsContext';
 export function useDynamicFontSize(baseSize: number): number {
   const { groterLettertype } = useRoosterSettings();
 
-  // Increase font size by 20% when groter lettertype is enabled
-  return groterLettertype ? Math.round(baseSize * 1.2) : baseSize;
+  // Increase font size by x% when groter lettertype is enabled
+  return groterLettertype ? Math.round(baseSize * 1.5) : baseSize;
 }
 
 // Predefined font sizes for common use cases
 export function useFontSizes() {
   const { groterLettertype } = useRoosterSettings();
-  const multiplier = groterLettertype ? 1.2 : 1;
+  const multiplier = groterLettertype ? 1.5 : 1;
 
   return {
     small: Math.round(12 * multiplier),
