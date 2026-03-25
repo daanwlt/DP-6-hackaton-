@@ -1,9 +1,10 @@
 import type { ReactNode } from 'react';
 import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 
+import { SCREEN_BACKGROUND } from '../constants/colors';
 import { AppHeader } from './AppHeader';
 
-const DEFAULT_BG = '#fdfdc2';
+const DEFAULT_BG = SCREEN_BACKGROUND;
 
 export type ScreenWithHeaderProps = {
   children?: ReactNode;
