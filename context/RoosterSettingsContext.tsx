@@ -36,6 +36,10 @@ type RoosterSettingsContextValue = {
   applyRoosterChoice: (classCode: string, accentColor: string) => void;
   /** Alleen klas wisselen; kleur volgt de opgeslagen kleur van die klas. */
   selectClass: (classCode: string) => void;
+  /** Of groter lettertype is ingeschakeld */
+  groterLettertype: boolean;
+  /** Toggle groter lettertype */
+  toggleGroterLettertype: () => void;
 };
 
 const RoosterSettingsContext = createContext<RoosterSettingsContextValue | null>(
@@ -47,6 +51,7 @@ export function RoosterSettingsProvider({ children }: { children: ReactNode }) {
   const [accentByClass, setAccentByClass] = useState<Record<string, string>>(
     buildDefaultAccents,
   );
+  const [groterLettertype, setGroterLettertype] = useState(false);
 
   const accentColor = useMemo(
     () => accentByClass[classCode] ?? HEADER_GREEN,
@@ -62,6 +67,10 @@ export function RoosterSettingsProvider({ children }: { children: ReactNode }) {
     setClassCode(nextClass);
   }, []);
 
+  const toggleGroterLettertype = useCallback(() => {
+    setGroterLettertype((prev) => !prev);
+  }, []);
+
   const value = useMemo(
     () => ({
       classCode,
@@ -69,8 +78,10 @@ export function RoosterSettingsProvider({ children }: { children: ReactNode }) {
       accentByClass,
       applyRoosterChoice,
       selectClass,
+      groterLettertype,
+      toggleGroterLettertype,
     }),
-    [classCode, accentColor, accentByClass, applyRoosterChoice, selectClass],
+    [classCode, accentColor, accentByClass, applyRoosterChoice, selectClass, groterLettertype, toggleGroterLettertype],
   );
 
   return (

@@ -4,6 +4,7 @@ import { Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-n
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BUTTON_LIME, HEADER_GREEN } from '../constants/colors';
+import { useFontSizes } from '../hooks/useFontSizes';
 import type { RootStackParamList } from '../navigation/types';
 
 const BORDER = '#000000';
@@ -37,6 +38,7 @@ const BUTTONS: {
 export function HomeScreen() {
   const navigation = useNavigation<HomeNavigation>();
   const insets = useSafeAreaInsets();
+  const fontSizes = useFontSizes();
 
   return (
     <ScrollView
@@ -47,9 +49,9 @@ export function HomeScreen() {
       ]}
       showsVerticalScrollIndicator={false}
     >
-      <Text style={styles.title}>Welkom!</Text>
+      <Text style={[styles.title, { fontSize: fontSizes.xxxlarge }]}>Welkom!</Text>
 
-      <Text style={styles.subtitle}>
+      <Text style={[styles.subtitle, { fontSize: fontSizes.medium }]}>
         Waar wil je naartoe?{'\n'}Kies een optie hieronder.
       </Text>
 
@@ -69,7 +71,7 @@ export function HomeScreen() {
               pressed && styles.buttonPressed,
             ]}
           >
-            <Text style={styles.buttonLabel}>{label}</Text>
+            <Text style={[styles.buttonLabel, { fontSize: fontSizes.medium }]}>{label}</Text>
           </Pressable>
         ))}
       </View>

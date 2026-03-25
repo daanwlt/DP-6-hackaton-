@@ -4,14 +4,17 @@ import { Pressable, ScrollView, StyleSheet, Text, View, Switch } from 'react-nat
 import { useNavigation } from '@react-navigation/native';
 
 import { HEADER_GREEN } from '../constants/colors';
+import { useRoosterSettings } from '../context/RoosterSettingsContext';
+import { useFontSizes } from '../hooks/useFontSizes';
 
 type Props = {};
 
 export function InstellingenScreen(_: Props) {
   const navigation = useNavigation();
+  const { groterLettertype, toggleGroterLettertype } = useRoosterSettings();
+  const fontSizes = useFontSizes();
 
   const [kleurenblind, setKleurenblind] = useState(false);
-  const [groterLetter, setGroterLetter] = useState(false);
   const [rolstoelRoute, setRolstoelRoute] = useState(false);
 
   return (
@@ -25,12 +28,12 @@ export function InstellingenScreen(_: Props) {
         >
           <Ionicons name="arrow-back" size={28} color="#000000" />
         </Pressable>
-        <Text style={styles.pageTitle}>Instellingen</Text>
+        <Text style={[styles.pageTitle, { fontSize: fontSizes.xlarge }]}>Instellingen</Text>
         <View style={styles.headerOffset} />
       </View>
 
       <View style={styles.switchRow}>
-        <Text style={styles.switchLabel}>Kleurenblind modus</Text>
+        <Text style={[styles.switchLabel, { fontSize: fontSizes.medium }]}>Kleurenblind modus</Text>
         <Switch
           value={kleurenblind}
           onValueChange={setKleurenblind}
@@ -40,17 +43,17 @@ export function InstellingenScreen(_: Props) {
       </View>
 
       <View style={styles.switchRow}>
-        <Text style={styles.switchLabel}>Groter lettertype</Text>
+        <Text style={[styles.switchLabel, { fontSize: fontSizes.medium }]}>Groter lettertype</Text>
         <Switch
-          value={groterLetter}
-          onValueChange={setGroterLetter}
-          thumbColor={groterLetter ? '#ffffff' : '#ffffff'}
-            trackColor={{ false: '#c4c4c4', true: '#45B97C' }}
-          />
-        </View>
+          value={groterLettertype}
+          onValueChange={toggleGroterLettertype}
+          thumbColor={groterLettertype ? '#ffffff' : '#ffffff'}
+          trackColor={{ false: '#c4c4c4', true: '#45B97C' }}
+        />
+      </View>
 
         <View style={styles.switchRow}>
-          <Text style={styles.switchLabel}>Rolstoelvriendelijke route</Text>
+          <Text style={[styles.switchLabel, { fontSize: fontSizes.medium }]}>Rolstoelvriendelijke route</Text>
           <Switch
             value={rolstoelRoute}
             onValueChange={setRolstoelRoute}
@@ -59,7 +62,7 @@ export function InstellingenScreen(_: Props) {
           />
         </View>
 
-        <Text style={styles.sectionTitle}>Help</Text>
+        <Text style={[styles.sectionTitle, { fontSize: fontSizes.large }]}>Help</Text>
 
         <Pressable
           accessibilityRole="button"
@@ -67,7 +70,7 @@ export function InstellingenScreen(_: Props) {
           onPress={() => {}}
           style={({ pressed }) => [styles.helpButton, pressed && styles.pressed]}
         >
-          <Text style={styles.helpButtonText}>Meestgestelde vragen</Text>
+          <Text style={[styles.helpButtonText, { fontSize: fontSizes.medium }]}>Meestgestelde vragen</Text>
         </Pressable>
       </ScrollView>
   );

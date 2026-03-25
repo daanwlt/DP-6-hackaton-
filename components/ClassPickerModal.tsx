@@ -3,6 +3,7 @@ import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { HEADER_GREEN } from '../constants/colors';
 import { CLASS_OPTIONS } from '../context/RoosterSettingsContext';
+import { useFontSizes } from '../hooks/useFontSizes';
 
 export type ClassPickerModalProps = {
   visible: boolean;
@@ -17,6 +18,7 @@ export function ClassPickerModal({
   selectedClass,
   onSelectClass,
 }: ClassPickerModalProps) {
+  const fontSizes = useFontSizes();
   return (
     <Modal
       visible={visible}
@@ -32,7 +34,7 @@ export function ClassPickerModal({
           onPress={onRequestClose}
         />
         <View style={styles.modalCard}>
-          <Text style={styles.modalTitle}>Kies een klas</Text>
+          <Text style={[styles.modalTitle, { fontSize: fontSizes.large }]}>Kies een klas</Text>
           {CLASS_OPTIONS.map((opt) => (
             <Pressable
               key={opt}
@@ -48,7 +50,7 @@ export function ClassPickerModal({
                 pressed && styles.pressed,
               ]}
             >
-              <Text style={styles.modalOptionText}>{opt}</Text>
+              <Text style={[styles.modalOptionText, { fontSize: fontSizes.medium }]}>{opt}</Text>
               {selectedClass === opt ? (
                 <Ionicons name="checkmark" size={20} color="#000000" />
               ) : null}

@@ -12,6 +12,7 @@ import {
   SCHEDULE_FIELD_BACKGROUND,
 } from '../constants/colors';
 import { useRoosterSettings } from '../context/RoosterSettingsContext';
+import { useFontSizes } from '../hooks/useFontSizes';
 import type { RootStackParamList } from '../navigation/types';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'RoosterOverzicht'>;
@@ -37,6 +38,7 @@ export function RoosterOverzichtScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
   const { classCode, accentColor, selectClass } = useRoosterSettings();
+  const fontSizes = useFontSizes();
   const [classMenuOpen, setClassMenuOpen] = useState(false);
 
   return (
@@ -51,7 +53,7 @@ export function RoosterOverzichtScreen() {
         >
           <Ionicons name="arrow-back" size={28} color="#000000" />
         </Pressable>
-        <Text style={styles.pageTitle} numberOfLines={1}>
+        <Text style={[styles.pageTitle, { fontSize: fontSizes.xlarge }]} numberOfLines={1}>
           Mijn rooster
         </Text>
         <View style={styles.toolbarBalance} />
@@ -75,7 +77,7 @@ export function RoosterOverzichtScreen() {
               pressed && styles.pressed,
             ]}
           >
-            <Text style={styles.addButtonLabel}>Rooster toevoegen</Text>
+            <Text style={[styles.addButtonLabel, { fontSize: fontSizes.medium }]}>Rooster toevoegen</Text>
           </Pressable>
 
           <Pressable
@@ -87,7 +89,7 @@ export function RoosterOverzichtScreen() {
               pressed && styles.pressed,
             ]}
           >
-            <Text style={styles.classCode} numberOfLines={1}>
+            <Text style={[styles.classCode, { fontSize: fontSizes.medium }]} numberOfLines={1}>
               {classCode}
             </Text>
             <Ionicons name="chevron-down" size={15} color="#000000" />
@@ -104,7 +106,7 @@ export function RoosterOverzichtScreen() {
           >
             <Ionicons name="chevron-back" size={24} color="#000000" />
           </Pressable>
-          <Text style={styles.dateText}>{DATE_LABEL}</Text>
+          <Text style={[styles.dateText, { fontSize: fontSizes.large }]}>{DATE_LABEL}</Text>
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Volgende dag"
@@ -132,12 +134,12 @@ export function RoosterOverzichtScreen() {
                   />
                 </View>
                 <View style={styles.lessonTextBlock}>
-                  <Text style={styles.courseName}>{lesson.course}</Text>
-                  <Text style={styles.roomText}>{lesson.room}</Text>
+                  <Text style={[styles.courseName, { fontSize: fontSizes.medium }]}>{lesson.course}</Text>
+                  <Text style={[styles.roomText, { fontSize: fontSizes.small }]}>{lesson.room}</Text>
                 </View>
                 <View style={styles.timeBlock}>
-                  <Text style={styles.timeText}>{lesson.start}</Text>
-                  <Text style={styles.timeText}>{lesson.end}</Text>
+                  <Text style={[styles.timeText, { fontSize: fontSizes.small }]}>{lesson.start}</Text>
+                  <Text style={[styles.timeText, { fontSize: fontSizes.small }]}>{lesson.end}</Text>
                 </View>
               </View>
               <Pressable

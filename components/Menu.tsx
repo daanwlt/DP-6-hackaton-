@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useFontSizes } from '../hooks/useFontSizes';
 
 export type MenuProps = {
   visible: boolean;
@@ -26,6 +27,7 @@ export function Menu({
   onNavigatePlattegrond,
   onNavigateInstellingen,
 }: MenuProps) {
+  const fontSizes = useFontSizes();
   const menuItems = [
     {
       id: 'Home',
@@ -86,7 +88,7 @@ export function Menu({
           onPress={onRequestClose}
         />
         <View style={styles.modalCard}>
-          <Text style={styles.modalTitle}>Menu</Text>
+          <Text style={[styles.modalTitle, { fontSize: fontSizes.large }]}>Menu</Text>
 
           {menuItems.map((item) => {
             const isActive = activeScreen === item.id;
@@ -109,7 +111,7 @@ export function Menu({
                   size={20}
                   color="#000000"
                 />
-                <Text style={styles.menuItemText}>{item.label}</Text>
+                <Text style={[styles.menuItemText, { fontSize: fontSizes.medium }]}>{item.label}</Text>
               </Pressable>
             );
           })}
