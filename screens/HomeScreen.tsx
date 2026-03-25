@@ -1,7 +1,10 @@
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BUTTON_LIME, HEADER_GREEN } from '../constants/colors';
+import type { RootStackParamList } from '../navigation/types';
 
 const BORDER = '#000000';
 
@@ -18,14 +21,21 @@ const BUTTON_SHADOW = Platform.select({
   default: {},
 });
 
-const BUTTONS: { label: string; tone: 'header' | 'lime' }[] = [
+type HomeNavigation = NativeStackNavigationProp<RootStackParamList, 'Home'>;
+
+const BUTTONS: {
+  label: string;
+  tone: 'header' | 'lime';
+  route?: keyof RootStackParamList;
+}[] = [
   { label: 'Volg mijn rooster', tone: 'header' },
   { label: 'Zelf Lokaal invoeren', tone: 'lime' },
-  { label: 'Rooster bekijken of toevoegen', tone: 'lime' },
+  { label: 'Rooster bekijken of toevoegen', tone: 'lime', route: 'RoosterOverzicht' },
   { label: 'Plattegrond', tone: 'lime' },
 ];
 
 export function HomeScreen() {
+  const navigation = useNavigation<HomeNavigation>();
   const insets = useSafeAreaInsets();
 
   return (
@@ -44,12 +54,14 @@ export function HomeScreen() {
       </Text>
 
       <View style={styles.buttons}>
-        {BUTTONS.map(({ label, tone }) => (
+        {BUTTONS.map(({ label, tone, route }) => (
           <Pressable
             key={label}
             accessibilityRole="button"
             onPress={() => {
-              // Navigatie volgt
+              if (route) {
+                navigation.navigate(route);
+              }
             }}
             style={({ pressed }) => [
               styles.button,
