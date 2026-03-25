@@ -28,10 +28,10 @@ const BUTTONS: {
   tone: 'header' | 'lime';
   route?: keyof RootStackParamList;
 }[] = [
-  { label: 'Volg mijn rooster', tone: 'header' },
+  { label: 'Volg mijn rooster', tone: 'header', route: 'RouteBevestiging' },
   { label: 'Zelf Lokaal invoeren', tone: 'lime' },
   { label: 'Rooster bekijken of toevoegen', tone: 'lime', route: 'RoosterOverzicht' },
-  { label: 'Plattegrond', tone: 'lime' },
+  { label: 'Plattegrond', tone: 'lime', route: 'RouteBevestiging' },
 ];
 
 export function HomeScreen() {
@@ -60,7 +60,7 @@ export function HomeScreen() {
             accessibilityRole="button"
             onPress={() => {
               if (route) {
-                navigation.navigate(route);
+                navigation.navigate(route as any);
               }
             }}
             style={({ pressed }) => [
@@ -92,7 +92,6 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     letterSpacing: -0.5,
   },
-  /** Eén blok zoals wireframe: strakke regelafstand tussen de twee zinnen */
   subtitle: {
     fontSize: 16,
     fontWeight: '400',
