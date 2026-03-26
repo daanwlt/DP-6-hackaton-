@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Menu, ScreenWithHeader } from '../components';
 import { HomeScreen } from '../screens/HomeScreen';
 import { InstellingenScreen } from '../screens/InstellingenScreen';
+import { CameraNavigatieScreen } from '../screens/CameraNavigatieScreen';
 import { PlattegrondKaartScreen } from '../screens/PlattegrondKaartScreen';
 import { PlattegrondScreen } from '../screens/PlattegrondScreen';
 import { RouteBevestigingScreen } from '../screens/RouteBevestigingScreen';
@@ -272,6 +273,10 @@ function PlattegrondKaartRoute() {
   return <PlattegrondKaartScreen />;
 }
 
+function CameraNavigatieRoute() {
+  return <CameraNavigatieScreen />;
+}
+
 export function AppNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -283,6 +288,7 @@ export function AppNavigator() {
       <Stack.Screen name="ZelfLokaalInvoeren" component={RouteBevestigingFlowRoute} />
       <Stack.Screen name="Plattegrond" component={PlattegrondRoute} />
       <Stack.Screen name="PlattegrondKaart" component={PlattegrondKaartRoute} />
+      <Stack.Screen name="CameraNavigatie" component={CameraNavigatieRoute} />
     </Stack.Navigator>
   );
 }
