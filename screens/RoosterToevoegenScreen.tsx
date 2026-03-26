@@ -19,6 +19,7 @@ import {
   SCHEDULE_FIELD_BACKGROUND,
 } from '../constants/colors';
 import { useRoosterSettings } from '../context/RoosterSettingsContext';
+import { useFontSizes } from '../hooks/useFontSizes';
 import type { RootStackParamList } from '../navigation/types';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'RoosterToevoegen'>;
@@ -51,6 +52,7 @@ export function RoosterToevoegenScreen() {
   const { width: windowWidth } = useWindowDimensions();
   const { classCode, accentColor, accentByClass, applyRoosterChoice } =
     useRoosterSettings();
+  const fontSizes = useFontSizes();
 
   const [draftClass, setDraftClass] = useState(classCode);
   const [draftColor, setDraftColor] = useState(accentColor);
@@ -85,7 +87,7 @@ export function RoosterToevoegenScreen() {
         >
           <Ionicons name="arrow-back" size={28} color="#000000" />
         </Pressable>
-        <Text style={styles.pageTitle} numberOfLines={1}>
+        <Text style={[styles.pageTitle, { fontSize: fontSizes.xlarge }]} numberOfLines={1}>
           Nieuw rooster
         </Text>
         <View style={styles.toolbarBalance} />
@@ -97,7 +99,7 @@ export function RoosterToevoegenScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View style={[styles.formBlock, { width: blockWidth }]}>
-          <Text style={styles.fieldLabel}>Selecteer rooster</Text>
+          <Text style={[styles.fieldLabel, { fontSize: fontSizes.medium }]}>Selecteer rooster</Text>
           <View style={[styles.roosterSelectWrap, { width: classCodeWidth }]}>
             <Pressable
               accessibilityRole="button"
@@ -115,7 +117,7 @@ export function RoosterToevoegenScreen() {
             </Pressable>
           </View>
 
-          <Text style={[styles.fieldLabel, styles.paletteLabelSpacing]}>
+          <Text style={[styles.fieldLabel, styles.paletteLabelSpacing, { fontSize: fontSizes.medium }]}>
             Kleurenpalet
           </Text>
           <View style={[styles.paletteBox, { width: blockWidth }]}>
@@ -173,7 +175,7 @@ export function RoosterToevoegenScreen() {
             pressed && styles.pressed,
           ]}
         >
-          <Text style={styles.footerButtonText}>Annuleren</Text>
+          <Text style={[styles.footerButtonText, { fontSize: fontSizes.medium }]}>Annuleren</Text>
         </Pressable>
         <Pressable
           accessibilityRole="button"
@@ -185,7 +187,7 @@ export function RoosterToevoegenScreen() {
             pressed && styles.pressed,
           ]}
         >
-          <Text style={styles.footerButtonText}>Bevestigen</Text>
+          <Text style={[styles.footerButtonText, { fontSize: fontSizes.medium }]}>Bevestigen</Text>
         </Pressable>
       </View>
 
