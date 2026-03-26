@@ -30,7 +30,7 @@ const BUTTONS: {
   route?: keyof RootStackParamList;
 }[] = [
   { label: 'Volg mijn rooster',              tone: 'header', route: 'RouteBevestiging' },
-  { label: 'Zelf Lokaal invoeren',            tone: 'lime' },
+  { label: 'Zelf Lokaal invoeren',            tone: 'lime',   route: 'ZelfLokaalInvoeren' },
   { label: 'Rooster bekijken of toevoegen',   tone: 'lime',   route: 'RoosterOverzicht' },
   { label: 'Plattegrond',                     tone: 'lime',   route: 'PlattegrondKaart' },
 ];

@@ -51,7 +51,7 @@ function HomeRoute() {
         }}
         onNavigateHandmatigeRoute={() => {
           setMenuVisible(false);
-          navigation.navigate('Home');
+          navigation.navigate('ZelfLokaalInvoeren');
         }}
         onNavigatePlattegrond={() => {
           setMenuVisible(false);
@@ -100,7 +100,7 @@ function RoosterOverzichtRoute() {
         }}
         onNavigateHandmatigeRoute={() => {
           setMenuVisible(false);
-          navigation.navigate('Home');
+          navigation.navigate('ZelfLokaalInvoeren');
         }}
         onNavigatePlattegrond={() => {
           setMenuVisible(false);
@@ -149,7 +149,7 @@ function RoosterToevoegenRoute() {
         }}
         onNavigateHandmatigeRoute={() => {
           setMenuVisible(false);
-          navigation.navigate('Home');
+          navigation.navigate('ZelfLokaalInvoeren');
         }}
         onNavigatePlattegrond={() => {
           setMenuVisible(false);
@@ -198,7 +198,7 @@ function InstellingenRoute() {
         }}
         onNavigateHandmatigeRoute={() => {
           setMenuVisible(false);
-          navigation.navigate('Home');
+          navigation.navigate('ZelfLokaalInvoeren');
         }}
         onNavigatePlattegrond={() => {
           setMenuVisible(false);
@@ -213,7 +213,8 @@ function InstellingenRoute() {
   );
 }
 
-function RouteBevestigingRoute() {
+/** Zelfde inhoud voor RouteBevestiging en ZelfLokaalInvoeren (aparte stack-instanties). */
+function RouteBevestigingFlowRoute() {
   const [menuVisible, setMenuVisible] = useState(false);
   const navigation = useNavigation<RootNav>();
 
@@ -247,7 +248,7 @@ function RouteBevestigingRoute() {
         }}
         onNavigateHandmatigeRoute={() => {
           setMenuVisible(false);
-          navigation.navigate('Home');
+          navigation.navigate('ZelfLokaalInvoeren');
         }}
         onNavigatePlattegrond={() => {
           setMenuVisible(false);
@@ -278,7 +279,8 @@ export function AppNavigator() {
       <Stack.Screen name="RoosterOverzicht" component={RoosterOverzichtRoute} />
       <Stack.Screen name="RoosterToevoegen" component={RoosterToevoegenRoute} />
       <Stack.Screen name="Instellingen" component={InstellingenRoute} />
-      <Stack.Screen name="RouteBevestiging" component={RouteBevestigingRoute} />
+      <Stack.Screen name="RouteBevestiging" component={RouteBevestigingFlowRoute} />
+      <Stack.Screen name="ZelfLokaalInvoeren" component={RouteBevestigingFlowRoute} />
       <Stack.Screen name="Plattegrond" component={PlattegrondRoute} />
       <Stack.Screen name="PlattegrondKaart" component={PlattegrondKaartRoute} />
     </Stack.Navigator>

@@ -4,6 +4,8 @@ export type RootStackParamList = {
   RoosterToevoegen: undefined;
   Instellingen: undefined;
   RouteBevestiging: undefined;
+  /** Zelfde UI als RouteBevestiging; aparte route voor latere differentiatie. */
+  ZelfLokaalInvoeren: undefined;
   Plattegrond: {
     startBuilding: string;
     startRoom: string;

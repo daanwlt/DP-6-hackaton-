@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute, type RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Image } from 'expo-image';
 import { useState } from 'react';
@@ -17,7 +17,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BUTTON_LIME, HEADER_GREEN } from '../constants/colors';
 import type { RootStackParamList } from '../navigation/types';
 
-type Nav = NativeStackNavigationProp<RootStackParamList, 'RouteBevestiging'>;
+type Nav = NativeStackNavigationProp<
+  RootStackParamList,
+  'RouteBevestiging' | 'ZelfLokaalInvoeren'
+>;
 
 // ─── Location data ────────────────────────────────────────────────────────────
 
@@ -158,20 +161,27 @@ function LocationCol({
   room,
   onBuildingPress,
   onRoomPress,
+  showRoomPicker = true,
 }: {
   heading: string;
   building: string;
   room: string;
   onBuildingPress: () => void;
   onRoomPress: () => void;
+  /** Toon "Kies een lokaal" + chip (uit voor eind locatie bij alleen rooster-volgen). */
+  showRoomPicker?: boolean;
 }) {
   return (
     <View style={lc.col}>
       <Text style={lc.heading}>{heading}</Text>
       <Text style={lc.sub}>Kies een gebouw</Text>
       <Chip label={building} onPress={onBuildingPress} />
-      <Text style={[lc.sub, { marginTop: 10 }]}>Kies een lokaal</Text>
-      <Chip label={room} onPress={onRoomPress} />
+      {showRoomPicker ? (
+        <>
+          <Text style={[lc.sub, { marginTop: 10 }]}>Kies een lokaal</Text>
+          <Chip label={room} onPress={onRoomPress} />
+        </>
+      ) : null}
     </View>
   );
 }
@@ -191,9 +201,18 @@ type ModalKey =
   | 'destRoom'
   | null;
 
+type RouteBevestigingRouteProp = RouteProp<
+  RootStackParamList,
+  'RouteBevestiging' | 'ZelfLokaalInvoeren'
+>;
+
 export function RouteBevestigingScreen() {
   const navigation = useNavigation<Nav>();
+  const route = useRoute<RouteBevestigingRouteProp>();
   const insets = useSafeAreaInsets();
+
+  /** Alleen op Zelf lokaal invoeren: beide lokale kiezers; op volg mijn rooster: geen eind-lokaal. */
+  const showEndLocationRoomPicker = route.name === 'ZelfLokaalInvoeren';
 
   const [startBuilding, setStartBuilding] = useState<Building>("'t Circus");
   const [startRoom, setStartRoom]         = useState('AC2.76');
@@ -259,6 +278,7 @@ export function RouteBevestigingScreen() {
             room={destRoom}
             onBuildingPress={() => setOpenModal('destBuilding')}
             onRoomPress={() => setOpenModal('destRoom')}
+            showRoomPicker={showEndLocationRoomPicker}
           />
         </View>
 
