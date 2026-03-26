@@ -2,11 +2,12 @@ import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { View } from 'react-native';
 
 import { Menu, ScreenWithHeader } from '../components';
 import { HomeScreen } from '../screens/HomeScreen';
 import { InstellingenScreen } from '../screens/InstellingenScreen';
-import { CameraNavigatieScreen } from '../screens/CameraNavigatieScreen';
+import { ARCameraNavigatieFlow } from '../screens/ARCameraNavigatieFlow';
 import { PlattegrondKaartScreen } from '../screens/PlattegrondKaartScreen';
 import { PlattegrondScreen } from '../screens/PlattegrondScreen';
 import { RouteBevestigingScreen } from '../screens/RouteBevestigingScreen';
@@ -274,7 +275,15 @@ function PlattegrondKaartRoute() {
 }
 
 function CameraNavigatieRoute() {
-  return <CameraNavigatieScreen />;
+  const navigation = useNavigation<RootNav>();
+  return (
+    <View style={{ flex: 1 }}>
+      <ARCameraNavigatieFlow
+        onExit={() => navigation.goBack()}
+        initialScreen="home"
+      />
+    </View>
+  );
 }
 
 export function AppNavigator() {

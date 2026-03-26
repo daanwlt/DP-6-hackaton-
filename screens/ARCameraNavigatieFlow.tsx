@@ -1,4 +1,11 @@
-import { Text, View, StyleSheet, TouchableOpacity, Animated } from 'react-native';
+import {
+  Animated,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Magnetometer, Accelerometer, Pedometer } from 'expo-sensors';
@@ -318,6 +325,43 @@ export function ARCameraNavigatieFlow({
       setTimeout(() => { setScreen('arrived'); advancingRef.current = false; }, 500);
     }
   }, []);
+
+  /**
+   * Kompas-heading komt alleen binnen als magnetometer + accelerometer data hebben.
+   * Web heeft geen magnetometer; simulator levert die vaak niet → blijft "warming up".
+   * Fallback: stel heading gelijk aan staprichting (demo / geen echte kompas).
+   */
+  useEffect(() => {
+    if (screen !== 'ar') return;
+    const step = ROUTES[selectedRoom]?.[stepIndex];
+    if (!step) return;
+
+    if (Platform.OS === 'web') {
+      setHeading((h) => h ?? step.direction);
+      return;
+    }
+
+    let cancelled = false;
+    const safetyTimer = setTimeout(() => {
+      if (!cancelled) setHeading((h) => h ?? step.direction);
+    }, 4000);
+
+    (async () => {
+      try {
+        const available = await Magnetometer.isAvailableAsync();
+        if (!cancelled && !available) {
+          setHeading((h) => h ?? step.direction);
+        }
+      } catch {
+        if (!cancelled) setHeading((h) => h ?? step.direction);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+      clearTimeout(safetyTimer);
+    };
+  }, [screen, selectedRoom, stepIndex]);
 
   // ── Compass + accel step detection ────────────────────────────
   useEffect(() => {
