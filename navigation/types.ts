@@ -3,5 +3,13 @@ export type RootStackParamList = {
   RoosterOverzicht: undefined;
   RoosterToevoegen: undefined;
   Instellingen: undefined;
-  Plattegrond: undefined;
+  RouteBevestiging: undefined;
+  Plattegrond: {
+    startBuilding: string;
+    startRoom: string;
+    destBuilding: string;
+    destRoom: string;
+    invalide: boolean;
+  };
+  PlattegrondKaart: undefined;
 };

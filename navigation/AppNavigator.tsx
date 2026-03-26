@@ -5,23 +5,25 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { Menu, ScreenWithHeader } from '../components';
 import { HomeScreen } from '../screens/HomeScreen';
+import { InstellingenScreen } from '../screens/InstellingenScreen';
+import { PlattegrondKaartScreen } from '../screens/PlattegrondKaartScreen';
+import { PlattegrondScreen } from '../screens/PlattegrondScreen';
+import { RouteBevestigingScreen } from '../screens/RouteBevestigingScreen';
 import { RoosterOverzichtScreen } from '../screens/RoosterOverzichtScreen';
 import { RoosterToevoegenScreen } from '../screens/RoosterToevoegenScreen';
-import { InstellingenScreen } from '../screens/InstellingenScreen';
-import { PlattegrondScreen } from '../screens/PlattegrondScreen';
 import type { RootStackParamList } from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-type HomeNavigation = NativeStackNavigationProp<RootStackParamList, 'Home'>;
+type RootNav = NativeStackNavigationProp<RootStackParamList>;
 
 function HomeRoute() {
   const [menuVisible, setMenuVisible] = useState(false);
-  const navigation = useNavigation<HomeNavigation>();
+  const navigation = useNavigation<RootNav>();
 
   return (
     <>
-      <ScreenWithHeader 
+      <ScreenWithHeader
         onMenuPress={() => setMenuVisible(true)}
         onSettingsPress={() => navigation.navigate('Instellingen')}
       >
@@ -37,7 +39,7 @@ function HomeRoute() {
         }}
         onNavigateRoosterVolgen={() => {
           setMenuVisible(false);
-          navigation.navigate('Home');
+          navigation.navigate('RouteBevestiging');
         }}
         onNavigateMijnRooster={() => {
           setMenuVisible(false);
@@ -53,7 +55,7 @@ function HomeRoute() {
         }}
         onNavigatePlattegrond={() => {
           setMenuVisible(false);
-          navigation.navigate('Plattegrond');
+          navigation.navigate('PlattegrondKaart');
         }}
         onNavigateInstellingen={() => {
           setMenuVisible(false);
@@ -66,11 +68,11 @@ function HomeRoute() {
 
 function RoosterOverzichtRoute() {
   const [menuVisible, setMenuVisible] = useState(false);
-  const navigation = useNavigation<HomeNavigation>();
+  const navigation = useNavigation<RootNav>();
 
   return (
     <>
-      <ScreenWithHeader 
+      <ScreenWithHeader
         onMenuPress={() => setMenuVisible(true)}
         onSettingsPress={() => navigation.navigate('Instellingen')}
       >
@@ -86,7 +88,7 @@ function RoosterOverzichtRoute() {
         }}
         onNavigateRoosterVolgen={() => {
           setMenuVisible(false);
-          navigation.navigate('Home');
+          navigation.navigate('RouteBevestiging');
         }}
         onNavigateMijnRooster={() => {
           setMenuVisible(false);
@@ -102,7 +104,7 @@ function RoosterOverzichtRoute() {
         }}
         onNavigatePlattegrond={() => {
           setMenuVisible(false);
-          navigation.navigate('Plattegrond');
+          navigation.navigate('PlattegrondKaart');
         }}
         onNavigateInstellingen={() => {
           setMenuVisible(false);
@@ -115,11 +117,11 @@ function RoosterOverzichtRoute() {
 
 function RoosterToevoegenRoute() {
   const [menuVisible, setMenuVisible] = useState(false);
-  const navigation = useNavigation<HomeNavigation>();
+  const navigation = useNavigation<RootNav>();
 
   return (
     <>
-      <ScreenWithHeader 
+      <ScreenWithHeader
         onMenuPress={() => setMenuVisible(true)}
         onSettingsPress={() => navigation.navigate('Instellingen')}
       >
@@ -135,7 +137,7 @@ function RoosterToevoegenRoute() {
         }}
         onNavigateRoosterVolgen={() => {
           setMenuVisible(false);
-          navigation.navigate('Home');
+          navigation.navigate('RouteBevestiging');
         }}
         onNavigateMijnRooster={() => {
           setMenuVisible(false);
@@ -151,7 +153,7 @@ function RoosterToevoegenRoute() {
         }}
         onNavigatePlattegrond={() => {
           setMenuVisible(false);
-          navigation.navigate('Plattegrond');
+          navigation.navigate('PlattegrondKaart');
         }}
         onNavigateInstellingen={() => {
           setMenuVisible(false);
@@ -164,11 +166,11 @@ function RoosterToevoegenRoute() {
 
 function InstellingenRoute() {
   const [menuVisible, setMenuVisible] = useState(false);
-  const navigation = useNavigation<HomeNavigation>();
+  const navigation = useNavigation<RootNav>();
 
   return (
     <>
-      <ScreenWithHeader 
+      <ScreenWithHeader
         onMenuPress={() => setMenuVisible(true)}
         onSettingsPress={() => navigation.navigate('Instellingen')}
       >
@@ -184,7 +186,7 @@ function InstellingenRoute() {
         }}
         onNavigateRoosterVolgen={() => {
           setMenuVisible(false);
-          navigation.navigate('Home');
+          navigation.navigate('RouteBevestiging');
         }}
         onNavigateMijnRooster={() => {
           setMenuVisible(false);
@@ -200,7 +202,7 @@ function InstellingenRoute() {
         }}
         onNavigatePlattegrond={() => {
           setMenuVisible(false);
-          navigation.navigate('Plattegrond');
+          navigation.navigate('PlattegrondKaart');
         }}
         onNavigateInstellingen={() => {
           setMenuVisible(false);
@@ -211,21 +213,21 @@ function InstellingenRoute() {
   );
 }
 
-function PlattegrondRoute() {
+function RouteBevestigingRoute() {
   const [menuVisible, setMenuVisible] = useState(false);
-  const navigation = useNavigation<HomeNavigation>();
+  const navigation = useNavigation<RootNav>();
 
   return (
     <>
-      <ScreenWithHeader 
+      <ScreenWithHeader
         onMenuPress={() => setMenuVisible(true)}
         onSettingsPress={() => navigation.navigate('Instellingen')}
       >
-        <PlattegrondScreen />
+        <RouteBevestigingScreen />
       </ScreenWithHeader>
       <Menu
         visible={menuVisible}
-        activeScreen="Plattegrond"
+        activeScreen="RoosterVolgen"
         onRequestClose={() => setMenuVisible(false)}
         onNavigateHome={() => {
           setMenuVisible(false);
@@ -233,7 +235,7 @@ function PlattegrondRoute() {
         }}
         onNavigateRoosterVolgen={() => {
           setMenuVisible(false);
-          navigation.navigate('Home');
+          navigation.navigate('RouteBevestiging');
         }}
         onNavigateMijnRooster={() => {
           setMenuVisible(false);
@@ -249,7 +251,7 @@ function PlattegrondRoute() {
         }}
         onNavigatePlattegrond={() => {
           setMenuVisible(false);
-          navigation.navigate('Plattegrond');
+          navigation.navigate('PlattegrondKaart');
         }}
         onNavigateInstellingen={() => {
           setMenuVisible(false);
@@ -258,6 +260,15 @@ function PlattegrondRoute() {
       />
     </>
   );
+}
+
+/** Volledig scherm (eigen header/footer in het scherm). */
+function PlattegrondRoute() {
+  return <PlattegrondScreen />;
+}
+
+function PlattegrondKaartRoute() {
+  return <PlattegrondKaartScreen />;
 }
 
 export function AppNavigator() {
@@ -267,7 +278,9 @@ export function AppNavigator() {
       <Stack.Screen name="RoosterOverzicht" component={RoosterOverzichtRoute} />
       <Stack.Screen name="RoosterToevoegen" component={RoosterToevoegenRoute} />
       <Stack.Screen name="Instellingen" component={InstellingenRoute} />
+      <Stack.Screen name="RouteBevestiging" component={RouteBevestigingRoute} />
       <Stack.Screen name="Plattegrond" component={PlattegrondRoute} />
+      <Stack.Screen name="PlattegrondKaart" component={PlattegrondKaartRoute} />
     </Stack.Navigator>
   );
 }

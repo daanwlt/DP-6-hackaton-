@@ -81,7 +81,15 @@ export function RoosterSettingsProvider({ children }: { children: ReactNode }) {
       groterLettertype,
       toggleGroterLettertype,
     }),
-    [classCode, accentColor, accentByClass, applyRoosterChoice, selectClass, groterLettertype, toggleGroterLettertype],
+    [
+      classCode,
+      accentColor,
+      accentByClass,
+      applyRoosterChoice,
+      selectClass,
+      groterLettertype,
+      toggleGroterLettertype,
+    ],
   );
 
   return (
