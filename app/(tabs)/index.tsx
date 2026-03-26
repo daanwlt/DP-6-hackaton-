@@ -51,6 +51,7 @@ const T = {
     stepOf:           'Step',
     of:               'of',
     steps:            'steps',
+    navigatingTo:     'Navigating to',
   },
   nl: {
     appTitle:         'Campus Navigator',
@@ -84,6 +85,7 @@ const T = {
     stepOf:           'Stap',
     of:               'van',
     steps:            'stappen',
+    navigatingTo:     'Navigeren naar',
   },
 };
 
@@ -145,10 +147,18 @@ const ROUTES: Record<string, RouteStep[]> = {
 
 // What to show on the arrived screen per route
 const ARRIVED_OPTIONS: Record<string, { room: string; nextRoute: string; isReturn: boolean }> = {
-  'AC1.70':          { room: 'AC1.70', nextRoute: 'AC1.70-to-AC1.30', isReturn: false },
-  'AC1.30':          { room: 'AC1.30', nextRoute: 'AC1.30-to-AC1.70', isReturn: true  },
-  'AC1.70-to-AC1.30':{ room: 'AC1.30', nextRoute: 'AC1.30-to-AC1.70', isReturn: true  },
-  'AC1.30-to-AC1.70':{ room: 'AC1.70', nextRoute: 'AC1.70-to-AC1.30', isReturn: false },
+  'AC1.70':           { room: 'AC1.70', nextRoute: 'AC1.70-to-AC1.30', isReturn: false },
+  'AC1.30':           { room: 'AC1.30', nextRoute: 'AC1.30-to-AC1.70', isReturn: true  },
+  'AC1.70-to-AC1.30': { room: 'AC1.30', nextRoute: 'AC1.30-to-AC1.70', isReturn: true  },
+  'AC1.30-to-AC1.70': { room: 'AC1.70', nextRoute: 'AC1.70-to-AC1.30', isReturn: false },
+};
+
+// Friendly display name per route key (for top bar label)
+const ROUTE_DISPLAY: Record<string, { en: string; nl: string }> = {
+  'AC1.70':           { en: 'AC1.70', nl: 'AC1.70' },
+  'AC1.30':           { en: 'AC1.30', nl: 'AC1.30' },
+  'AC1.70-to-AC1.30': { en: 'AC1.30', nl: 'AC1.30' },
+  'AC1.30-to-AC1.70': { en: 'AC1.70', nl: 'AC1.70' },
 };
 
 // ─── Maths ───────────────────────────────────────────────────────
@@ -203,25 +213,18 @@ function ChevronArrow({ color }: { color: string }) {
     // One master loop: 1 on → 2 on → 3 on → all off → repeat
     const sequence = Animated.loop(
       Animated.sequence([
-        // Arrow 1 lights up
         Animated.timing(anim1, { toValue: 1,    duration: 150, useNativeDriver: true }),
-        // Arrow 2 lights up
         Animated.timing(anim2, { toValue: 1,    duration: 150, useNativeDriver: true }),
-        // Arrow 3 lights up
         Animated.timing(anim3, { toValue: 1,    duration: 150, useNativeDriver: true }),
-        // Hold all lit briefly
         Animated.delay(200),
-        // All fade off together
         Animated.parallel([
           Animated.timing(anim1, { toValue: 0.15, duration: 200, useNativeDriver: true }),
           Animated.timing(anim2, { toValue: 0.15, duration: 200, useNativeDriver: true }),
           Animated.timing(anim3, { toValue: 0.15, duration: 200, useNativeDriver: true }),
         ]),
-        // Pause before next cycle
         Animated.delay(300),
       ])
     );
-
     sequence.start();
     return () => sequence.stop();
   }, []);
@@ -284,7 +287,7 @@ export default function Index() {
   screenRef.current    = screen;
 
   const advancingRef  = useRef(false);
-  const stepStartTime = useRef(Date.now()); // guard against immediate auto-advance on step start
+  const stepStartTime = useRef(Date.now());
   const [permission, requestPermission] = useCameraPermissions();
   const t = T[lang];
 
@@ -322,14 +325,14 @@ export default function Index() {
       const step = ROUTES[roomRef.current]?.[stepIndexRef.current];
       const mag  = Math.sqrt(acc.x ** 2 + acc.y ** 2 + acc.z ** 2);
 
-      // Escalator shake
+      // Escalator shake detectie
       if (step?.escalator && mag > ESCALATOR_SHAKE_MAG) {
         setEscShaking(true);
         escalatorRate.current = 400;
         setTimeout(() => { setEscShaking(false); escalatorRate.current = 1000; }, 2000);
       }
 
-      // Step counting
+      // Stap tellen
       if (!step || step.escalator || step.steps === 0 || step.manualOnly) return;
       const rawMag = Math.sqrt(acc.x ** 2 + acc.y ** 2 + acc.z ** 2);
       smoothedMag.current = LOW_PASS_ALPHA * smoothedMag.current + (1 - LOW_PASS_ALPHA) * rawMag;
@@ -349,7 +352,7 @@ export default function Index() {
     return () => { magSub.remove(); accSub.remove(); };
   }, []);
 
-  // ── Reset counters per step ────────────────────────────────────
+  // ── Reset tellers per stap ────────────────────────────────────
   useEffect(() => {
     advancingRef.current  = false;
     accelStepsRef.current = 0;
@@ -358,7 +361,7 @@ export default function Index() {
     smoothedMag.current  = 1.0;
     peakDetected.current = false;
     lastStepMs.current   = 0;
-    stepStartTime.current = Date.now(); // record when this step started
+    stepStartTime.current = Date.now();
   }, [stepIndex]);
 
   // ── Pedometer ─────────────────────────────────────────────────
@@ -375,18 +378,17 @@ export default function Index() {
     return () => pedoSub?.remove();
   }, [screen, stepIndex]);
 
-  // ── Auto-advance via steps ─────────────────────────────────────
+  // ── Auto-advance via stappen ───────────────────────────────────
   useEffect(() => {
     if (screen !== 'ar') return;
     const step = ROUTES[selectedRoom]?.[stepIndex];
     if (!step || step.steps === 0 || step.escalator || step.manualOnly) return;
-    // Guard: ignore step counts in the first 1500ms of a new step — prevents
-    // pedometer leftover counts from triggering immediate advance
+    // Guard: eerste 1500ms negeren — voorkomt dat resterende stappen van vorige stap direct doorgaan
     if (Date.now() - stepStartTime.current < 1500) return;
     if (stepCount >= step.steps) advanceStep();
   }, [stepCount, screen, selectedRoom, stepIndex, advanceStep]);
 
-  // ── Escalator countdown ────────────────────────────────────────
+  // ── Roltrap aftelling ─────────────────────────────────────────
   useEffect(() => {
     const step = screen === 'ar' ? ROUTES[selectedRoom]?.[stepIndex] : null;
     if (!step?.escalator) return;
@@ -403,7 +405,7 @@ export default function Index() {
     return () => clearTimeout(escalatorRef.current);
   }, [screen, stepIndex, advanceStep]);
 
-  // ── Arrow animation ────────────────────────────────────────────
+  // ── Pijl animatie ─────────────────────────────────────────────
   useEffect(() => {
     if (heading === null || screen !== 'ar') return;
     const step = ROUTES[selectedRoom]?.[stepIndex];
@@ -481,22 +483,29 @@ export default function Index() {
         <View style={[styles.tintOverlay, { backgroundColor: arrowColor + '18' }]} />
 
         <View style={styles.overlay}>
-          {/* Top bar */}
+          {/* Bovenste balk — bestemming + stap teller */}
           <View style={styles.topBar}>
             <View style={styles.debugBar}>
+              {/* Navigatie label — toont de bestemming */}
+              <Text style={styles.debugText}>
+                {t.navigatingTo} {ROUTE_DISPLAY[selectedRoom]?.[lang] ?? selectedRoom}
+              </Text>
+              {/* Stap teller — pedo en accel stappen */}
+              <Text style={styles.debugText}>
+                Pedo:{pedoAvail === null ? '…' : pedoAvail ? 'ON' : 'OFF'}  Accel:{accelSteps}  Best:{stepCount}/{step.steps}
+              </Text>
+              {/* DEBUG — kompas graden, verwijder voor productie / uncomment to re-enable
               <Text style={styles.debugText}>
                 {Math.round(heading)}° → {step.direction}°  |  Δ{Math.round(diff)}°
               </Text>
-              <Text style={styles.debugText}>
-                Pedo:{pedoAvail === null ? '…' : pedoAvail ? 'ON' : 'OFF'} {pedoSteps}  Accel:{accelSteps}  Best:{stepCount}/{step.steps}
-              </Text>
+              */}
             </View>
             <TouchableOpacity style={styles.langToggle} onPress={() => setLang(l => l === 'en' ? 'nl' : 'en')}>
               <Text style={styles.langToggleText}>{lang.toUpperCase()}</Text>
             </TouchableOpacity>
           </View>
 
-          {/* Progress dots */}
+          {/* Voortgang stippen */}
           <View style={styles.dotsRow}>
             {ROUTES[selectedRoom].map((_, i) => (
               <View key={i} style={[
@@ -507,7 +516,7 @@ export default function Index() {
             ))}
           </View>
 
-          {/* Arrow or escalator */}
+          {/* Pijl of roltrap */}
           <View style={styles.arrowWrapper}>
             {step.escalator ? (
               <View style={styles.escalatorBox}>
@@ -530,7 +539,7 @@ export default function Index() {
             )}
           </View>
 
-          {/* Bottom card */}
+          {/* Onderste kaart */}
           <View style={styles.bottomCard}>
             <View style={styles.stepRow}>
               <Text style={styles.stepLabel}>{t.stepOf} {stepIndex + 1} {t.of} {total}</Text>
@@ -572,7 +581,7 @@ export default function Index() {
     );
   }
 
-  // ── Select Screen ─────────────────────────────────────────────
+  // ── Selecteer Scherm ──────────────────────────────────────────
   if (screen === 'select') {
     return (
       <View style={styles.darkContainer}>
@@ -608,7 +617,7 @@ export default function Index() {
     );
   }
 
-  // ── Arrived Screen ────────────────────────────────────────────
+  // ── Aangekomen Scherm ─────────────────────────────────────────
   if (screen === 'arrived') {
     const opt = ARRIVED_OPTIONS[selectedRoom];
     return (
@@ -643,7 +652,7 @@ export default function Index() {
     );
   }
 
-  // ── Home Screen ───────────────────────────────────────────────
+  // ── Home Scherm ───────────────────────────────────────────────
   return (
     <View style={styles.darkContainer}>
       <TouchableOpacity style={styles.langToggleFloating} onPress={() => setLang(l => l === 'en' ? 'nl' : 'en')}>
