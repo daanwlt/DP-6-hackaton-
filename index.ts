@@ -1,4 +1,6 @@
 import 'react-native-gesture-handler';
+// Moet vroeg geladen worden (vóór navigatie/screens), anders: NativeWorklets / [runtime not ready] op iOS.
+import 'react-native-reanimated';
 
 import { registerRootComponent } from 'expo';
 
