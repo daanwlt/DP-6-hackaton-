@@ -234,6 +234,7 @@ export function PlattegrondScreen() {
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Camera openen"
+          onPress={() => navigation.navigate('CameraNavigatie')}
           style={({ pressed }) => [s.cameraBtn, pressed && { opacity: 0.65 }]}
         >
           <Ionicons name="camera" size={22} color="#fff" />

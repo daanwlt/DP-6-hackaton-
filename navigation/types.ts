@@ -14,4 +14,6 @@ export type RootStackParamList = {
     invalide: boolean;
   };
   PlattegrondKaart: undefined;
+  /** Cameraweergave voor stap-voor-stap navigatie (vanaf plattegrond-route). */
+  CameraNavigatie: undefined;
 };
