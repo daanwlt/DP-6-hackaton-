@@ -10,4 +10,5 @@ export type RootStackParamList = {
     destRoom: string;
     invalide: boolean;
   };
+  PlattegrondKaart: undefined;
 };

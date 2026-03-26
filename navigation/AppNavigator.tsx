@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { ScreenWithHeader } from '../components';
 import { HomeScreen } from '../screens/HomeScreen';
+import { PlattegrondKaartScreen } from '../screens/PlattegrondKaartScreen';
 import { PlattegrondScreen } from '../screens/PlattegrondScreen';
 import { RouteBevestigingScreen } from '../screens/RouteBevestigingScreen';
 import { RoosterOverzichtScreen } from '../screens/RoosterOverzichtScreen';
@@ -42,10 +43,14 @@ function RouteBevestigingRoute() {
   );
 }
 
-// PlattegrondScreen uses its own full-screen layout (step banner + footer)
-// so we do NOT wrap it in ScreenWithHeader
+// PlattegrondScreen has its own full-screen layout (step banner + footer)
 function PlattegrondRoute() {
   return <PlattegrondScreen />;
+}
+
+// PlattegrondKaartScreen is also full-screen (no header, map fills the view)
+function PlattegrondKaartRoute() {
+  return <PlattegrondKaartScreen />;
 }
 
 export function AppNavigator() {
@@ -56,6 +61,7 @@ export function AppNavigator() {
       <Stack.Screen name="RoosterToevoegen" component={RoosterToevoegenRoute} />
       <Stack.Screen name="RouteBevestiging" component={RouteBevestigingRoute} />
       <Stack.Screen name="Plattegrond" component={PlattegrondRoute} />
+      <Stack.Screen name="PlattegrondKaart" component={PlattegrondKaartRoute} />
     </Stack.Navigator>
   );
 }
