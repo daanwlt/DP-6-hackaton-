@@ -1,5 +1,6 @@
 import {
   Animated,
+  Linking,
   Platform,
   StyleSheet,
   Text,
@@ -59,6 +60,10 @@ const T = {
     of:               'of',
     steps:            'steps',
     navigatingTo:     'Navigating to',
+    cameraNeeded:     'Camera access is needed for AR navigation.',
+    cameraHint:       'Tap the button below to allow the camera.',
+    allowCamera:      'Allow camera',
+    openSettings:     'Open settings',
   },
   nl: {
     appTitle:         'Campus Navigator',
@@ -93,6 +98,10 @@ const T = {
     of:               'van',
     steps:            'stappen',
     navigatingTo:     'Navigeren naar',
+    cameraNeeded:     'De camera is nodig voor AR-navigatie.',
+    cameraHint:       'Tik op de knop om cameratoestemming te geven.',
+    allowCamera:      'Cameratoestemming geven',
+    openSettings:     'Open instellingen',
   },
 };
 
@@ -314,6 +323,12 @@ export function ARCameraNavigatieFlow({
     else setScreen('home');
   }, [onExit]);
 
+  /** Vraag cameratoestemming zodra de AR-modus start (telefoon toont systeemdialoog). */
+  useEffect(() => {
+    if (screen !== 'ar') return;
+    void requestPermission();
+  }, [screen, requestPermission]);
+
   const advanceStep = useCallback(() => {
     if (advancingRef.current) return;
     advancingRef.current = true;
@@ -489,10 +504,47 @@ export function ARCameraNavigatieFlow({
     const isLastStep = stepIndex === ROUTES[selectedRoom].length - 1;
     const total      = ROUTES[selectedRoom].length;
 
+    if (permission === null) {
+      return (
+        <View style={styles.arContainer}>
+          <View style={[styles.overlay, styles.permissionCenter]}>
+            <Text style={styles.calibrateText}>{t.warmingUp}</Text>
+          </View>
+        </View>
+      );
+    }
+
+    if (!permission.granted) {
+      return (
+        <View style={styles.arContainer}>
+          <View style={styles.permissionWrap}>
+            <Text style={styles.permissionTitle}>{t.cameraNeeded}</Text>
+            <Text style={styles.permissionHint}>{t.cameraHint}</Text>
+            <TouchableOpacity
+              style={styles.permissionBtn}
+              onPress={() => void requestPermission()}
+              activeOpacity={0.85}
+            >
+              <Text style={styles.permissionBtnText}>{t.allowCamera}</Text>
+            </TouchableOpacity>
+            {!permission.canAskAgain ? (
+              <TouchableOpacity
+                style={styles.permissionBtnSecondary}
+                onPress={() => void Linking.openSettings()}
+                activeOpacity={0.85}
+              >
+                <Text style={styles.permissionBtnText}>{t.openSettings}</Text>
+              </TouchableOpacity>
+            ) : null}
+          </View>
+        </View>
+      );
+    }
+
     if (heading === null) {
       return (
         <View style={styles.arContainer}>
-          <CameraView style={StyleSheet.absoluteFillObject} />
+          <CameraView facing="back" style={StyleSheet.absoluteFillObject} />
           <View style={styles.overlay}>
             <View style={styles.arrowWrapper}>
               <Text style={styles.calibrateText}>{t.warmingUp}</Text>
@@ -539,7 +591,7 @@ export function ARCameraNavigatieFlow({
 
     return (
       <View style={styles.arContainer}>
-        <CameraView style={StyleSheet.absoluteFillObject} />
+        <CameraView facing="back" style={StyleSheet.absoluteFillObject} />
         <View style={[styles.tintOverlay, { backgroundColor: arrowColor + '18' }]} />
 
         <View style={styles.overlay}>
@@ -767,6 +819,27 @@ const styles = StyleSheet.create({
   arrivedBadge:       { width: 80, height: 80, borderRadius: 40, borderWidth: 2, justifyContent: 'center', alignItems: 'center', marginBottom: 8 },
   arrivedCheck:       { fontSize: 40, fontWeight: '300' },
   arContainer:        { flex: 1, backgroundColor: '#000' },
+  permissionCenter:   { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  permissionWrap:     { flex: 1, justifyContent: 'center', padding: 28, gap: 16 },
+  permissionTitle:    { color: C.white, fontSize: 18, fontWeight: '700', textAlign: 'center' },
+  permissionHint:     { color: C.muted, fontSize: 14, textAlign: 'center', lineHeight: 20 },
+  permissionBtn:      {
+    backgroundColor: C.dark,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: C.border,
+  },
+  permissionBtnSecondary: {
+    backgroundColor: C.surface,
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: C.border,
+  },
+  permissionBtnText:  { color: C.white, fontWeight: '700', textAlign: 'center', fontSize: 16 },
   tintOverlay:        { ...StyleSheet.absoluteFillObject },
   overlay:            { flex: 1, justifyContent: 'space-between', paddingTop: 50 },
   topBar:             { flexDirection: 'row', alignItems: 'flex-start', paddingHorizontal: 16, gap: 8 },
